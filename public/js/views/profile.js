@@ -11,8 +11,7 @@ function(SocialNetView,  profileTemplate,
       "submit form": "postStatus"
     },
 
-    initialize: function (options) {
-      this.socketEvents = options.socketEvents;
+    initialize: function () {
       this.model.bind('change', this.render, this);
     },
 
@@ -22,13 +21,10 @@ function(SocialNetView,  profileTemplate,
       var statusCollection = this.collection;
       $.post('/accounts/' + this.model.get('_id') + '/status', {
         status: statusText
+      }, function(data) {
+        that.prependStatus(new Status({status:statusText}));
       });
       return false;
-    },
-
-    onSocketStatusAdded: function(data) {
-      var newStatus = data.data;
-      this.prependStatus(new Status({status:newStatus.status,name:newStatus.name}))
     },
 
     prependStatus: function(statusModel) {
@@ -37,9 +33,6 @@ function(SocialNetView,  profileTemplate,
     },
 
     render: function() {
-      if ( this.model.get('_id')) {
-        this.socketEvents.bind('status:' + this.model.get('_id'), this.onSocketStatusAdded, this );
-      }
       var that = this;
       this.$el.html(
         _.template(profileTemplate,this.model.toJSON())

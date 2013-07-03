@@ -1,4 +1,5 @@
-define(['SocialNetView', 'text!templates/login.html'], function(SocialNetView, loginTemplate) {
+define(['SocialNetView', 'text!templates/login.html'],
+function(SocialNetView, loginTemplate) {
   var loginView = SocialNetView.extend({
     requireLogin: false,
 
@@ -16,7 +17,7 @@ define(['SocialNetView', 'text!templates/login.html'], function(SocialNetView, l
       var socketEvents = this.socketEvents;
       $.post('/login',
         this.$('form').serialize(), function(data) {
-          socketEvents.trigger('app:loggedin', data);
+          socketEvents.trigger('app:loggedin');
           window.location.hash = 'index';
       }).error(function(){
         $("#error").text('Unable to login.');

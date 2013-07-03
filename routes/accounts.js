@@ -42,12 +42,6 @@ module.exports = function(app, models) {
       account.save(function (err) {
         if (err) {
           console.log('Error saving account: ' + err);
-        } else {
-          app.triggerEvent('event:' + accountId, {
-            from: accountId,
-            data: status,
-            action: 'status'
-          });
         }
       });
     });
@@ -116,7 +110,8 @@ module.exports = function(app, models) {
                        ? req.session.accountId
                        : req.params.id;
     models.Account.findById(accountId, function(account) {
-      if ( accountId == 'me' || models.Account.hasContact(account, req.session.accountId) ) {
+      if ( accountId == 'me'
+           || models.Account.hasContact(account, req.session.accountId) ) {
         account.isFriend = true;
       }
       res.send(account);
